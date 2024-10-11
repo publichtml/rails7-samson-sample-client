@@ -4,9 +4,9 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 # ssh 関連
 RUN apt-get update && apt-get install -y openssh-server vim
 RUN mkdir /var/run/sshd
-# NOTE: root の password は `screencast`
-RUN echo 'root:screencast' | chpasswd
 RUN echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
+COPY id_rsa.pub /root/.ssh/authorized_keys
+RUN chmod 700 /root/.ssh && chmod 600 /root/.ssh/authorized_keys
 
 # cap, rails 関連
 ENV CAPISTRANO_ROOT_DIR "/var/www/app"
